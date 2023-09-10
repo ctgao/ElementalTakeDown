@@ -1,0 +1,54 @@
+body {
+/*    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, serif; */
+    font-family: Papyrus, Copperplate, fantasy, serif;
+    letter-spacing: 2px;
+    line-height: 1.6;
+    color: white;
+    max-width: 50rem;
+    padding: 2rem;
+    margin: auto;
+    background-color: #aBaBaB;
+    font-weight: bolder;
+}
+
+img {
+    max-width: 100%;
+}
+
+.fire {
+    color: #DC2A2A;
+}
+.water {
+    color: #1100FF;
+}
+.ice {
+    color: #00F7FF;
+}
+.earth {
+    color: #FFCD00;
+}
+.electric {
+    color: #AB00FF;
+}
+.plant {
+    color: #2dfc46;
+}
+.wind {
+    color: #57ffb9;
+}
+
+a {
+    color: #D5FF00;
+}
+
+.maintitle {
+    color: #FF009A;
+    text-decoration: underline;
+/*    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; */
+}
+
+legend {
+    color: #843500;
+/*    outline: 2px #843500; */
+    font-size: 20px;
+}
