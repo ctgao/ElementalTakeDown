@@ -2,7 +2,7 @@ import './footer.scss';
 
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 import { Col, Row } from 'reactstrap';
 
@@ -17,8 +17,7 @@ const Footer = () => (
           <br />
           Source Code:&nbsp;
           <a href="https://github.com/ctgao/ElementalTakeDown" target="_blank" rel="noopener noreferrer">
-{/*             <FontAwesomeIcon icon={faGithub} /> */}
-            GitHub
+            GitHub&nbsp;<FontAwesomeIcon icon={faGithub} />
           </a>
         </p>
       </Col>

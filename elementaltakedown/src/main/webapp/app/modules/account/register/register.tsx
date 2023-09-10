@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
 import { Row, Col, Alert, Button } from 'reactstrap';
 import { toast } from 'react-toastify';
@@ -10,6 +11,7 @@ import { handleRegister, reset } from './register.reducer';
 export const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(
     () => () => {
@@ -20,6 +22,7 @@ export const RegisterPage = () => {
 
   const handleValidSubmit = ({ username, email, firstPassword }) => {
     dispatch(handleRegister({ login: username, email, password: firstPassword, langKey: 'en' }));
+    navigate('/');
   };
 
   const updatePassword = event => setPassword(event.target.value);
@@ -105,7 +108,7 @@ export const RegisterPage = () => {
           </ValidatedForm>
           <p>&nbsp;</p>
           <Alert color="warning">
-            <span>If you want to</span>
+            <span>If you want to&nbsp;</span>
             <a className="alert-link">sign in</a>
             <span>
               , you can try the default accounts:
