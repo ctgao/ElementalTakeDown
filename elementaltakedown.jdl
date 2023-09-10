@@ -1,13 +1,3 @@
-application {
-  config {
-    baseName elementaltakedown,
-    packageName ctgao.passion.elementaltakedown,
-    applicationType monolith,
-    prodDatabaseType mysql,
-  }
-  entities *
-}
-
 entity UserProfile {
   name String
 }
