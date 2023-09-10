@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { ICharacterCard } from 'app/shared/model/character-card.model';
-import { getEntities, getUserSpecificEntities } from 'app/entities/character-card/character-card.reducer';
+import { IArchiveCard } from 'app/shared/model/archive.model';
+import { getUserSpecificEntities } from './archive.reducer';
 
 export const CharacterArchive = () => {
   const dispatch = useAppDispatch();
@@ -14,12 +14,12 @@ export const CharacterArchive = () => {
   const navigate = useNavigate();
 
   const loggedInUser = useAppSelector(state => state.authentication.account.login);
-  const characterCardList = useAppSelector(state => state.characterCard.entities);
-  const loading = useAppSelector(state => state.characterCard.loading);
+  const characterCardList = useAppSelector(state => state.archive.entities);
+  const loading = useAppSelector(state => state.archive.loading);
 
   useEffect(() => {
-    if(loggedInUser === undefined) dispatch(getEntities({}));
-    else dispatch(getUserSpecificEntities(loggedInUser));
+//     if(loggedInUser === undefined) dispatch(getEntities({}));
+//     else dispatch(getUserSpecificEntities(loggedInUser));
   }, [loggedInUser]);
 
 //   const handleSyncList = () => {

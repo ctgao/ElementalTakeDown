@@ -1,31 +1,28 @@
 package ctgao.passion.elementaltakedown.web.rest;
 
 import ctgao.passion.elementaltakedown.config.Constants;
-import ctgao.passion.elementaltakedown.domain.CharacterCard;
-import ctgao.passion.elementaltakedown.domain.UserProfile;
-import ctgao.passion.elementaltakedown.service.UserProfileService;
+import ctgao.passion.elementaltakedown.service.ArchiveService;
+import ctgao.passion.elementaltakedown.service.dto.ArchiveCard;
 import ctgao.passion.elementaltakedown.service.dto.UserProfileDTO;
-import ctgao.passion.elementaltakedown.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import tech.jhipster.web.util.HeaderUtil;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Pattern;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
- * REST controller for managing {@link ctgao.passion.elementaltakedown.domain.UserProfile}.
+ * REST controller for managing the Archive Cards.
  */
 @RestController
-@RequestMapping("/api/character-cards/archive")
+@RequestMapping("/api")
 @Transactional
 public class ArchiveResource {
 
@@ -36,48 +33,75 @@ public class ArchiveResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private UserProfileService userService;
+    private ArchiveService archiveService;
 
-    public ArchiveResource(UserProfileService userService) {
-        this.userService = userService;
+    public ArchiveResource(ArchiveService archiveService) {
+        this.archiveService = archiveService;
     }
 
     /**
-     * {@code GET /character-cards/archive/:login} : get the "logged in" user, get the associate "user profile", then return the list of cards
-     * @param login the login of the User to retrieve their userProfile.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the userProfile, or with status {@code 404 (Not Found)}.
+     * {@code GET /archive : get all the cards as archive cards
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with list of cards, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/{login}")
-    public List<CharacterCard> getCardsOwned(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
-        log.debug("REST request to get User : {}", login);
+    @GetMapping("/archive")
+    public List<ArchiveCard> getAllCards() {
+        log.debug("REST request to get all Archive Cards");
+        return archiveService.getAllCards();
+    }
+
+    /**
+     * {@code GET /archive/:login} : get the "logged in" user, get the associate "user profile", then return the list of cards
+     * @param login the login of the User to retrieve their UserProfile.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with list of cards, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/archive/{login}")
+    public List<ArchiveCard> getCardsOwned(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
+        log.debug("REST request to get Cards of User : {}", login);
         // consequences: an empty profile gets created if that login doesn't have a profile already associated with it
-        UserProfileDTO profileDTO = userService.getProfileByLogin(login);
+        UserProfileDTO profileDTO = archiveService.findProfileByLogin(login);
         if(profileDTO != null) {
-            return new ArrayList<>(profileDTO.getCards());
+            return archiveService.getUserOwnedCards(profileDTO);
         }
+        // should we even actually get here?
         return new ArrayList<>();
     }
 
     /**
-     * {@code PUT /character-cards/archive/:login} : get the "logged in" user, update the associated "user profile"
-     * @param login the login of the User to retrieve their userProfile.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the userProfile, or with status {@code 404 (Not Found)}.
+     * {@code GET /archive/:login/all} : get the "logged in" user, get the associate "user profile", then return the list of cards
+     * @param login the login of the User to retrieve their UserProfile.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with list of cards, or with status {@code 404 (Not Found)}.
      */
-    @PutMapping("/{login}")
-    public ResponseEntity<UserProfile> updateCardsOwned(
-        @PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login,
-        @RequestBody List<CharacterCard> characterCards
-    ) throws URISyntaxException {
-        log.debug("REST request to get User : {}", login);
-        UserProfileDTO profileDTO = userService.getProfileByLogin(login);
-        if(profileDTO == null) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+    @GetMapping("/archive/{login}/all")
+    public List<ArchiveCard> getAllCardsIncludingOwnership(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
+        log.debug("REST request to get all Cards with flags of ownership for User : {}", login);
+        UserProfileDTO profileDTO = archiveService.findProfileByLogin(login);
+        if(profileDTO != null) {
+            return archiveService.getAllCardsWithOwnership(profileDTO);
         }
-
-        UserProfile result = userService.updateProfile(profileDTO, characterCards);
-        return ResponseEntity
-            .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        // should we even actually get here?
+        return new ArrayList<>();
     }
+
+//    /**
+//     * {@code PUT /character-cards/archive/:login} : get the "logged in" user, update the associated "user profile"
+//     * @param login the login of the User to retrieve their userProfile.
+//     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the userProfile, or with status {@code 404 (Not Found)}.
+//     */
+//    @PutMapping("/{login}")
+//    public List<ArchiveCard> updateCardsOwned(
+//        @PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login,
+//        @RequestBody List<CharacterCard> characterCards
+//    ) throws URISyntaxException {
+//        log.debug("REST request to get User : {}", login);
+//        UserProfileDTO profileDTO = userService.getProfileByLogin(login);
+//        if(profileDTO == null) {
+//            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+//        }
+//
+//        UserProfile result = userService.updateProfile(profileDTO, characterCards);
+//        return ResponseEntity
+//            .ok()
+//            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+//            .body(result);
+//    }
 }
