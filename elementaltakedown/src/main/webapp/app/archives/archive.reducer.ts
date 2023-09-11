@@ -13,29 +13,34 @@ const initialState: EntityState<IArchiveCard> = {
   updateSuccess: false,
 };
 
-const apiUrl = 'api/character-cards/archive/';
+const apiUrl = 'api/archive';
 
 // Actions
 
-export const getUserSpecificEntities = createAsyncThunk('archive/fetch_entity_list', async (login: string) => {
+export const getUserSpecificEntities = createAsyncThunk('characterCard/fetch_entity_list', async (login: string) => {
   const requestUrl = `${apiUrl}/${login}?cacheBuster=${new Date().getTime()}`;
   return axios.get<IArchiveCard[]>(requestUrl);
 });
 
-export const getEntities = createAsyncThunk('archive/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
+export const getEntities = createAsyncThunk('characterCard/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
+  return axios.get<IArchiveCard[]>(requestUrl);
+});
+
+export const getEntitiesWithOwnership = createAsyncThunk('characterCard/fetch_entity_list', async (login: string) => {
+  const requestUrl = `${apiUrl}/${login}/all`;
   return axios.get<IArchiveCard[]>(requestUrl);
 });
 
 export interface IArchiveUpdateParams {
   login: string;
-  sendingEntities: IArchiveCard[];
+  entities: IArchiveCard[];
 };
 
 export const updateEntity = createAsyncThunk(
   'characterCard/update_entity',
-  async ({login, sendingEntities}: IArchiveUpdateParams, thunkAPI) => {
-    const result = await axios.put<IArchiveCard[]>(`${apiUrl}/${login}`, sendingEntities);
+  async ({login, entities}: IArchiveUpdateParams, thunkAPI) => {
+    const result = await axios.put<IArchiveCard[]>(`${apiUrl}/${login}`, entities);
     thunkAPI.dispatch(getUserSpecificEntities(login));
     return result;
   },
@@ -45,11 +50,20 @@ export const updateEntity = createAsyncThunk(
 // slice
 
 export const ArchiveSlice = createEntitySlice({
-  name: 'archive',
+  name: 'characterCard',
   initialState,
   extraReducers(builder) {
     builder
       .addMatcher(isFulfilled(getUserSpecificEntities), (state, action) => {
+        const { data } = action.payload;
+
+        return {
+          ...state,
+          loading: false,
+          entities: data,
+        };
+      })
+      .addMatcher(isFulfilled(getEntitiesWithOwnership), (state, action) => {
         const { data } = action.payload;
 
         return {

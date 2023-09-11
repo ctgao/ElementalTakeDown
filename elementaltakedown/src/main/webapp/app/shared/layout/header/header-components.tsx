@@ -30,8 +30,8 @@ export const Home = () => (
 export const Archive = () => (
   <NavItem>
     <NavLink tag={Link} to="/archive" className="d-flex align-items-center">
-      <FontAwesomeIcon icon="home" />
-      <span>Archive</span>
+      <FontAwesomeIcon icon="list" />
+      <span>&nbsp;Archive</span>
     </NavLink>
   </NavItem>
 );
