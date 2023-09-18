@@ -58,7 +58,7 @@ export const CharacterArchive = () => {
                   <td>{characterCard.skill ? characterCard.skill.name : ''}</td>
                   <td>{characterCard.ultimate ? characterCard.ultimate.name : ''}</td>
                   <td className="text-end">
-                    <Button tag={Link} to={`/character-card/${characterCard.id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                    <Button tag={Link} to={`/archive/${characterCard.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                       <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                     </Button>
                   </td>

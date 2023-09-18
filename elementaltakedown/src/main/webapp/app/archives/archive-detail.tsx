@@ -22,24 +22,36 @@ export const ArchiveDetail = () => {
   return (
     <Row>
       <Col md="8">
-        <h1 data-cy="characterCardDetailsHeading">Character Card</h1>
-        <dl className="jh-entity-details">
-          <dt>
-            <span id="name">Name</span>
-          </dt>
-          <dd>{characterCardEntity.name}</dd>
-          <dt>
-            <span id="element">Element</span>
-          </dt>
-          <dd>{characterCardEntity.element}</dd>
-          <dt>Basic</dt>
-          <dd>{characterCardEntity.basic ? characterCardEntity.basic.name : ''}</dd>
-          <dt>Skill</dt>
-          <dd>{characterCardEntity.skill ? characterCardEntity.skill.name : ''}</dd>
-          <dt>Ultimate</dt>
-          <dd>{characterCardEntity.ultimate ? characterCardEntity.ultimate.name : ''}</dd>
+        <h1 data-cy="characterCardDetailsHeading"
+            className="text-secondary"
+            style={{textShadow: '0px 0px 2px #2554b3'}}>
+          <u>Character Card</u>
+        </h1>
+        <dl style={{padding: '10px'}}>
+          <dt><h3>{characterCardEntity.name}</h3></dt>
+          <dd style={{paddingLeft: '25px', paddingBottom: '10px'}}
+              className={characterCardEntity.element}>
+            <h4><strong style={{textShadow: '0px 0px 2px #2554b3'}}>
+              Element: {characterCardEntity.element}
+            </strong></h4>
+          </dd>
+          <dt><h5>
+            {characterCardEntity.basic ? characterCardEntity.basic.name : ''}
+          </h5></dt>
+          <dd style={{paddingLeft: '25px', paddingBottom: '10px', color: 'white'}}>
+            {characterCardEntity.basic ? characterCardEntity.basic.description : ''}
+          </dd>
+          <dt><h5>{characterCardEntity.skill ? characterCardEntity.skill.name : ''}</h5></dt>
+          <dd style={{paddingLeft: '25px', paddingBottom: '10px', color: 'white'}}>
+            {characterCardEntity.skill ? characterCardEntity.skill.description : ''}
+          </dd>
+          <dt><h5>{characterCardEntity.ultimate ? characterCardEntity.ultimate.name : ''}</h5></dt>
+          <dd style={{paddingLeft: '25px', paddingBottom: '10px', color: 'white'}}>
+            Required Energy: {characterCardEntity.ultimate ? characterCardEntity.ultimate.requiredEnergy : ''}
+            <br />{characterCardEntity.ultimate ? characterCardEntity.ultimate.description : ''}
+          </dd>
         </dl>
-        <Button tag={Link} to="/character-card" replace color="info" data-cy="entityDetailsBackButton">
+        <Button tag={Link} to="/archive" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
       </Col>

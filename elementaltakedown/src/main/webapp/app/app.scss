@@ -5,6 +5,29 @@
 @import '~bootswatch/dist/vapor/bootswatch';
 body {
   margin: 0;
+  font-size: 110%;
+}
+
+.FIRE {
+  color: #DC2A2A;
+}
+.WATER {
+  color: #3075ff;
+}
+.ICE {
+  color: #00F7FF;
+}
+.EARTH {
+  color: #f2cc1f;
+}
+.ELECTRIC {
+  color: #AB00FF;
+}
+.PLANT {
+  color: #2dfc46;
+}
+.WIND {
+  color: #14faa2;
 }
 
 a {
