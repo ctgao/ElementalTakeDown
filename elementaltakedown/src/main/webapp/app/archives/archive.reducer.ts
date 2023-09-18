@@ -5,6 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IArchiveCard, defaultValue } from 'app/shared/model/archive.model';
 import { IUserProfile } from 'app/shared/model/user-profile.model';
+import { ICharacterCard } from 'app/shared/model/character-card.model';
 
 const initialState: EntityState<IArchiveCard> = {
   loading: false,
@@ -29,6 +30,15 @@ export const getEntities = createAsyncThunk('archive/fetch_entity_list', async (
   return axios.get<IArchiveCard[]>(requestUrl);
 });
 
+export const getEntity = createAsyncThunk(
+  'archive/fetch_entity',
+  async (id: string | number) => {
+    const requestUrl = `api/character-cards/${id}`;
+    return axios.get<ICharacterCard>(requestUrl);
+  },
+  { serializeError: serializeAxiosError }
+);
+
 export const getEntitiesWithOwnership = createAsyncThunk('archive/fetch_owner_entity_list', async (login: string) => {
   const requestUrl = `${apiUrl}/${login}/all`;
   return axios.get<IArchiveCard[]>(requestUrl);
@@ -43,7 +53,7 @@ export const updateEntityCardsOnly = createAsyncThunk(
   'archive/update_entity_cards_only',
   async ({login, entities}: IArchiveUpdateParams, thunkAPI) => {
     entities.forEach(cleanEntity);
-    const result = await axios.put<IUserProfile>(`api/archive/${login}`, entities);
+    const result = await axios.put<IUserProfile>(`${apiUrl}/${login}`, entities);
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -57,6 +67,10 @@ export const ArchiveSlice = createEntitySlice({
   initialState,
   extraReducers(builder) {
     builder
+      .addCase(getEntity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entity = action.payload.data;
+      })
       .addMatcher(isFulfilled(getEntities, getUserSpecificEntities, getEntitiesWithOwnership), (state, action) => {
         const { data } = action.payload;
 
@@ -72,7 +86,7 @@ export const ArchiveSlice = createEntitySlice({
         state.updateSuccess = true;
 //         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getUserSpecificEntities, getEntities, getEntitiesWithOwnership), state => {
+      .addMatcher(isPending(getUserSpecificEntities, getEntities, getEntitiesWithOwnership, getEntity), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;
