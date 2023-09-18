@@ -24,4 +24,19 @@ public class ArchiveMapper {
     public ArchiveCard charaToArchive(CharacterCard characterCard) {
         return new ArchiveCard(characterCard);
     }
+
+    public List<CharacterCard> archivesToCharacters(List<ArchiveCard> archiveCards) {
+        return archiveCards.stream().filter(Objects::nonNull).map(this::archiveToChara).collect(Collectors.toList());
+    }
+
+    public CharacterCard archiveToChara(ArchiveCard archiveCard) {
+        CharacterCard newCard = new CharacterCard();
+        newCard.setId(archiveCard.getId());
+        newCard.setName(archiveCard.getName());
+        newCard.setElement(archiveCard.getElement());
+        newCard.setBasic(archiveCard.getBasic());
+        newCard.setSkill(archiveCard.getSkill());
+        newCard.setUltimate(archiveCard.getUltimate());
+        return newCard;
+    }
 }

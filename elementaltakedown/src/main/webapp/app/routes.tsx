@@ -37,7 +37,7 @@ const AppRoutes = () => {
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route path="archive" element={<CharacterArchive />} />
-        <Route path="archive/update" element={<UpdateUserArchive />}>
+        <Route path="archive/update" element={<UpdateUserArchive />}/>
         <Route path="account">
           <Route
             path="*"

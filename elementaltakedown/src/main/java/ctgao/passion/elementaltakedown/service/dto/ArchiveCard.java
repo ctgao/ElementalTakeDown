@@ -30,6 +30,9 @@ public class ArchiveCard implements Serializable {
     private Boolean owned;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+    public ArchiveCard(){
+        // for jackson or wtv
+    }
 
     public ArchiveCard(CharacterCard card){
         this.id = card.getId();

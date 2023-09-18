@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -96,7 +97,7 @@ public class ArchiveService {
 
         // change their cards to archive cards
         List<ArchiveCard> ownedArchiveCards = archiveMapper.charactersToArchives(ownedCards);
-        ownedArchiveCards.stream().forEach(archiveCard -> archiveCard.setOwned(true));
+//        ownedArchiveCards.stream().forEach(archiveCard -> archiveCard.setOwned(true));
 
         return ownedArchiveCards;
     }
@@ -119,5 +120,23 @@ public class ArchiveService {
 
     public List<ArchiveCard> getAllCards(){
         return archiveMapper.charactersToArchives(characterCardRepository.findAll());
+    }
+
+    public UserProfile updateProfile(UserProfileDTO profileDTO, List<ArchiveCard> allCards){
+        // owned archive cards
+        List<ArchiveCard> ownedArchives = allCards.stream()
+            .filter(card -> card.getOwned())
+            .collect(Collectors.toList());
+//        log.debug("this card {}", ownedArchives.get(0).getName());
+        // owned character cards
+        List<CharacterCard> ownedCharacters = archiveMapper.archivesToCharacters(ownedArchives);
+//        log.debug("this card {}", ownedCharacters.get(0).getName());
+        // get the userprofile - you WILL have one
+        UserProfile up = userProfileRepository.findOneWithEagerRelationships(profileDTO.getProfileId()).get();
+        // set the cards they own
+        up.setCards(new LinkedHashSet<>(ownedCharacters));
+        // save the user profile
+        UserProfile result = userProfileRepository.save(up);
+        return result;
     }
 }

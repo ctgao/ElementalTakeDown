@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
 
+import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IArchiveCard, defaultValue } from 'app/shared/model/archive.model';
+import { IUserProfile } from 'app/shared/model/user-profile.model';
 
 const initialState: EntityState<IArchiveCard> = {
   loading: false,
@@ -17,17 +19,17 @@ const apiUrl = 'api/archive';
 
 // Actions
 
-export const getUserSpecificEntities = createAsyncThunk('characterCard/fetch_entity_list', async (login: string) => {
+export const getUserSpecificEntities = createAsyncThunk('archive/fetch_user_entity_list', async (login: string) => {
   const requestUrl = `${apiUrl}/${login}?cacheBuster=${new Date().getTime()}`;
   return axios.get<IArchiveCard[]>(requestUrl);
 });
 
-export const getEntities = createAsyncThunk('characterCard/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
+export const getEntities = createAsyncThunk('archive/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
   const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
   return axios.get<IArchiveCard[]>(requestUrl);
 });
 
-export const getEntitiesWithOwnership = createAsyncThunk('characterCard/fetch_entity_list', async (login: string) => {
+export const getEntitiesWithOwnership = createAsyncThunk('archive/fetch_owner_entity_list', async (login: string) => {
   const requestUrl = `${apiUrl}/${login}/all`;
   return axios.get<IArchiveCard[]>(requestUrl);
 });
@@ -37,11 +39,12 @@ export interface IArchiveUpdateParams {
   entities: IArchiveCard[];
 };
 
-export const updateEntity = createAsyncThunk(
-  'characterCard/update_entity',
+export const updateEntityCardsOnly = createAsyncThunk(
+  'archive/update_entity_cards_only',
   async ({login, entities}: IArchiveUpdateParams, thunkAPI) => {
-    const result = await axios.put<IArchiveCard[]>(`${apiUrl}/${login}`, entities);
-    thunkAPI.dispatch(getUserSpecificEntities(login));
+    entities.forEach(cleanEntity);
+    const result = await axios.put<IUserProfile>(`api/archive/${login}`, entities);
+    thunkAPI.dispatch(getEntities({}));
     return result;
   },
   { serializeError: serializeAxiosError }
@@ -50,11 +53,11 @@ export const updateEntity = createAsyncThunk(
 // slice
 
 export const ArchiveSlice = createEntitySlice({
-  name: 'characterCard',
+  name: 'archive',
   initialState,
   extraReducers(builder) {
     builder
-      .addMatcher(isFulfilled(getUserSpecificEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, getUserSpecificEntities, getEntitiesWithOwnership), (state, action) => {
         const { data } = action.payload;
 
         return {
@@ -63,39 +66,24 @@ export const ArchiveSlice = createEntitySlice({
           entities: data,
         };
       })
-      .addMatcher(isFulfilled(getEntitiesWithOwnership), (state, action) => {
-        const { data } = action.payload;
-
-        return {
-          ...state,
-          loading: false,
-          entities: data,
-        };
-      })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
-        const { data } = action.payload;
-
-        return {
-          ...state,
-          loading: false,
-          entities: data,
-        };
-      })
-      .addMatcher(isFulfilled(updateEntity), (state, action) => {
+      .addMatcher(isFulfilled(updateEntityCardsOnly), (state, action) => {
         state.updating = false;
         state.loading = false;
         state.updateSuccess = true;
-        state.entities = action.payload.data;
+//         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(updateEntity), state => {
+      .addMatcher(isPending(getUserSpecificEntities, getEntities, getEntitiesWithOwnership), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.loading = true;
+      })
+      .addMatcher(isPending(updateEntityCardsOnly), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.updating = true;
       });
   },
 });
-
-export const { reset } = ArchiveSlice.actions;
 
 // Reducer
 export default ArchiveSlice.reducer;

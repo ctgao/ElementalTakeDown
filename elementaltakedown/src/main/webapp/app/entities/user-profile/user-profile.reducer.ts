@@ -4,6 +4,7 @@ import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/t
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IUserProfile, defaultValue } from 'app/shared/model/user-profile.model';
+import { IArchiveCard } from 'app/shared/model/archive.model';
 
 const initialState: EntityState<IUserProfile> = {
   loading: false,
@@ -46,6 +47,22 @@ export const updateEntity = createAsyncThunk(
   'userProfile/update_entity',
   async (entity: IUserProfile, thunkAPI) => {
     const result = await axios.put<IUserProfile>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export interface IArchiveUpdateParams {
+  login: string;
+  entities: IArchiveCard[];
+};
+
+export const updateEntityCardsOnly = createAsyncThunk(
+  'userProfile/update_entity_cards_only',
+  async ({login, entities}: IArchiveUpdateParams, thunkAPI) => {
+    entities.forEach(cleanEntity);
+    const result = await axios.put<IUserProfile>(`api/archive/${login}`, entities);
     thunkAPI.dispatch(getEntities({}));
     return result;
   },
@@ -98,7 +115,7 @@ export const UserProfileSlice = createEntitySlice({
           entities: data,
         };
       })
-      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
+      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity, updateEntityCardsOnly), (state, action) => {
         state.updating = false;
         state.loading = false;
         state.updateSuccess = true;
@@ -109,7 +126,7 @@ export const UserProfileSlice = createEntitySlice({
         state.updateSuccess = false;
         state.loading = true;
       })
-      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity), state => {
+      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity, updateEntityCardsOnly), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.updating = true;

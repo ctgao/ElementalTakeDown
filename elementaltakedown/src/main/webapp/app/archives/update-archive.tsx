@@ -3,10 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IArchiveCard } from 'app/shared/model/archive.model';
-import { getEntitiesWithOwnership, updateEntity } from './archive.reducer';
+import { getEntitiesWithOwnership, updateEntityCardsOnly } from './archive.reducer';
+import { Checkbox } from './checkbox';
+import { cleanEntity } from 'app/shared/util/entity-utils';
 
 export const UpdateUserArchive = () => {
   const dispatch = useAppDispatch();
@@ -14,44 +17,54 @@ export const UpdateUserArchive = () => {
   const navigate = useNavigate();
 
   const login = useAppSelector(state => state.authentication.account.login);
-  const characterCardList = useAppSelector(state => state.characterCard.entities);
-  const loading = useAppSelector(state => state.characterCard.loading);
-  const updating = useAppSelector(state => state.characterCard.updating);
-  const updateSuccess = useAppSelector(state => state.characterCard.updateSuccess);
+  const characterCardList = useAppSelector(state => state.archive.entities);
+  const loading = useAppSelector(state => state.archive.loading);
+  const updating = useAppSelector(state => state.archive.updating);
+  const updateSuccess = useAppSelector(state => state.archive.updateSuccess);
 
-  const [checkedState, setCheckedState] = useState(new Array(characterCardList.length).fill(false));
+  const [data, setData] = useState(characterCardList.map((card, index) => card.owned));
+
+  const handleClose = () => {
+    navigate('/archive');
+  };
 
   useEffect(() => {
     dispatch(getEntitiesWithOwnership(login));
   }, []);
 
   useEffect(() => {
+    console.log("we updated!");
     if (updateSuccess) {
-      navigate('/archive');
+      handleClose();
     }
   }, [updateSuccess]);
 
   useEffect(() => {
-    const initialVals = characterCardList.map((card, index) => loading ? false : card.owned);
-    setCheckedState(initialVals);
+    console.log(characterCardList);
+    if(!loading && !updating){
+      const initialVals = characterCardList.map((card, index) => card.owned);
+      setData(initialVals);
+    }
   }, [loading]);
 
-  const saveEntity = () => {
-    const entities = [];
+  const saveEntity = (event) => {
+    event.preventDefault();
+
+    let entities = [];
     for(let i = 0; i < characterCardList.length; i++){
-      entities[i] = characterCardList[i];
-      entities[i].owned = checkedState[i];
+      entities[i] = JSON.parse(JSON.stringify(characterCardList[i]));
+      entities[i].owned = data[i];
     }
-//     console.log(entities);
-    dispatch(updateEntity({login, entities}));
+
+    dispatch(updateEntityCardsOnly({login, entities}));
   };
 
-  const handleOnChange = (position) => {
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === position ? !item : item
-    );
-    setCheckedState(updatedCheckedState);
-  };
+  const handleChange = (item) => {
+    let newData = new Array(...data);
+    newData[item.index - 1] = item.checked;
+    const newDataTWO = new Array(...newData);
+    setData(newData);
+  }
 
   return (
     <div>
@@ -75,11 +88,9 @@ export const UpdateUserArchive = () => {
                     <td>{characterCard.name}</td>
                     <td>{characterCard.element}</td>
                     <td className="text-end">
-                      <input
-                        type="checkbox"
-                        id={`entity-${i}`}
-                        checked={checkedState[i]}
-                        onChange={() => handleOnChange(i)}
+                      <Checkbox
+                        obj={{index: characterCard.id, name: characterCard.name, checked: data[characterCard.id - 1]}}
+                        onChange={item => handleChange(item)}
                       />
                     </td>
                   </tr>

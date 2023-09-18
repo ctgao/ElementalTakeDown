@@ -15,22 +15,25 @@ export const CharacterArchive = () => {
   const navigate = useNavigate();
 
   const loggedInUser = useAppSelector(state => state.authentication.account.login);
-  const characterCardList = useAppSelector(state => state.characterCard.entities);
-  const loading = useAppSelector(state => state.characterCard.loading);
+  const characterCardList = useAppSelector(state => state.archive.entities);
+  const loading = useAppSelector(state => state.archive.loading);
 
   useEffect(() => {
     if(loggedInUser === undefined) dispatch(getEntities({}));
     else dispatch(getUserSpecificEntities(loggedInUser));
-  }, [loggedInUser]);
+  }, []);
 
   return (
     <div>
       <h1 id="character-card-heading" data-cy="CharacterCardHeading">
         Personal Character Archive
         <div className="d-flex justify-content-end">
-          <Button tag={Link} to={`/archive/update`} className="me-2" color="primary">
-            <FontAwesomeIcon icon={faPenToSquare} /> Edit Archive
-          </Button>
+          {loggedInUser !== undefined ?
+            <Button tag={Link} to={`/archive/update`} className="me-2" color="primary">
+              <FontAwesomeIcon icon={faPenToSquare} /> Edit Archive
+            </Button>
+            : <span>&nbsp;</span>
+          }
         </div>
       </h2>
       <div className="table-responsive">
@@ -63,7 +66,7 @@ export const CharacterArchive = () => {
               ))}
             </tbody>
           </Table>
-        ) : (
+          ) : (
           !loading && <div className="alert alert-warning">No Character Cards found</div>
         )}
       </div>
