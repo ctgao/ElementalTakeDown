@@ -1,0 +1,27 @@
+HOW TO: Fix your git commits!
+
+The issue: my SSH git commits weren't registering onto Github
+
+SOLUTION:
+1. Check the git config file ($HOME/.gitconfig - usually .gitconfig). Can be the global file
+   or the local repository file.
+2. Make sure there's a name and email associated with your account. If your email is set to private,
+   use the auto-generated one from github and it'll appear on your account.
+
+IN THE CASE: that your commits are already pushed to github, not to worry! We can fix that!
+It takes some finagling and some confidence in using Github through command-line so I heavily advise caution.
+1. git rebase -i --root (starts an interactive rebase by showing a list of all commits in a file)
+2. VIM opens up. Select the commits you want to modify by changing 'pick' to 'edit'.
+   If you would like to change all the commits, enable line numbers with 'set nu'
+   and perform the following replace: :1,Ns/pick/edit/g (where N is the line number of the last line)
+2.5 Exit VIM with ':w' ':q' to write (save) the file and then quit the file.
+3. Through command line, choose 'git commit --amend' or 'git rebase --continue'.
+   'git commit --amend -author="name <email@example.com>"'
+4. When the process is done, check your progress with 'git log --format=fuller'
+   This will show you all of your commits and the full history, with author, committer, and dates for each.
+5. Likely, the commit date is the current date/time. To fix this, run
+   'git rebase --committer-date-is-author-date -root' to change all commit dates to author dates.
+6. Doing a 'git status' now is going to show you that your branch has diverged from the remote branch.
+   'git push -f origin main' to get the remote Github repo to match your local version of it.
+
+https://git-scm.com/docs/git-commit
