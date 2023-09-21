@@ -1,0 +1,100 @@
+// the game board
+entity GameTable {
+  p1turn Boolean
+}
+
+entity PlayerProfile {
+  activeCardIdx Integer min(1) max(3)
+}
+
+entity CardProfile {
+  currentHP Integer required
+  infusion Boolean required
+  elementalStatus DmgElementType
+}
+
+relationship OneToOne {
+  GameTable{playerOne} to PlayerProfile
+  GameTable{playerTwo} to PlayerProfile
+  PlayerProfile{user(name)} to UserProfile
+  PlayerProfile{card1} to CardProfile
+  PlayerProfile{card2} to CardProfile
+  PlayerProfile{card3} to CardProfile
+}
+
+relationship ManyToOne {
+  CardProfile{character(name)} to CharacterCard
+}
+
+// the user experience
+entity UserProfile {
+  name String
+}
+
+entity CharacterCard {
+  name String required
+  element ElementType required
+}
+
+entity BasicATK {
+  name String
+  description String
+}
+
+entity SkillATK {
+  name String
+  description String
+  // will later have bonus effects
+}
+
+entity UltimateATK {
+  name String
+  description String
+  requiredEnergy Integer required min(1) max(5)
+}
+
+entity Damage {
+  name String
+  dmgValue Integer required max(20)
+  dmgElement DmgElementType required
+  splashDmg Integer max(5)
+  splashElement DmgElementType
+}
+
+relationship OneToOne {
+  CharacterCard{basic(name) required} to BasicATK
+  CharacterCard{skill(name) required} to SkillATK
+  CharacterCard{ultimate(name) required} to UltimateATK
+  UserProfile{user(login)} to User{profile}
+}
+
+relationship ManyToOne {
+  BasicATK{damage(name) required} to Damage
+  SkillATK{damage(name) required} to Damage
+  UltimateATK{damage(name) required} to Damage
+}
+
+relationship ManyToMany {
+  UserProfile{cards(name)} to CharacterCard{owners}
+}
+
+enum ElementType {
+  WATER
+  FIRE
+  ICE
+  PLANT
+  ELECTRIC
+  EARTH
+  WIND
+}
+
+enum DmgElementType {
+  WATER("Water")
+  FIRE("Fire")
+  ICE("Ice")
+  PLANT("Plant")
+  ELECTRIC("Electric")
+  EARTH("Earth")
+  WIND("Wind")
+  PHYSICAL("Physical")
+}
