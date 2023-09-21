@@ -8,7 +8,7 @@ entity PlayerProfile {
 }
 
 entity CardProfile {
-  currentHP Integer required
+  currentHP Integer required min(0) max(10)
   infusion Boolean required
   elementalStatus DmgElementType
 }
