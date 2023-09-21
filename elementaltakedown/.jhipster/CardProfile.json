@@ -1,0 +1,40 @@
+{
+  "applications": "*",
+  "changelogDate": "20230921210044",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "card_profile",
+  "fields": [
+    {
+      "fieldName": "currentHP",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMax": "10",
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "infusion",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "elementalStatus",
+      "fieldType": "DmgElementType",
+      "fieldValues": "WATER (Water),FIRE (Fire),ICE (Ice),PLANT (Plant),ELECTRIC (Electric),EARTH (Earth),WIND (Wind),PHYSICAL (Physical)"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "CardProfile",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "characterCard",
+      "relationshipName": "character",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

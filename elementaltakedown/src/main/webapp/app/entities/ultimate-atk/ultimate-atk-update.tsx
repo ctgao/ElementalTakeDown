@@ -95,6 +95,8 @@ export const UltimateATKUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'This field is required.' },
+                  min: { value: 1, message: 'This field should be at least 1.' },
+                  max: { value: 5, message: 'This field cannot be more than 5.' },
                   validate: v => isNumber(v) || 'This field should be a number.',
                 }}
               />

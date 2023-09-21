@@ -34,14 +34,14 @@ class DamageResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_DMG_VALUE = 1;
-    private static final Integer UPDATED_DMG_VALUE = 2;
+    private static final Integer DEFAULT_DMG_VALUE = 20;
+    private static final Integer UPDATED_DMG_VALUE = 19;
 
     private static final DmgElementType DEFAULT_DMG_ELEMENT = DmgElementType.WATER;
     private static final DmgElementType UPDATED_DMG_ELEMENT = DmgElementType.FIRE;
 
-    private static final Integer DEFAULT_SPLASH_DMG = 1;
-    private static final Integer UPDATED_SPLASH_DMG = 2;
+    private static final Integer DEFAULT_SPLASH_DMG = 5;
+    private static final Integer UPDATED_SPLASH_DMG = 4;
 
     private static final DmgElementType DEFAULT_SPLASH_ELEMENT = DmgElementType.WATER;
     private static final DmgElementType UPDATED_SPLASH_ELEMENT = DmgElementType.FIRE;

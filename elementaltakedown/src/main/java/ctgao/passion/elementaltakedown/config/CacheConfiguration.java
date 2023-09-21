@@ -56,6 +56,9 @@ public class CacheConfiguration {
             createCache(cm, ctgao.passion.elementaltakedown.domain.SkillATK.class.getName());
             createCache(cm, ctgao.passion.elementaltakedown.domain.UltimateATK.class.getName());
             createCache(cm, ctgao.passion.elementaltakedown.domain.Damage.class.getName());
+            createCache(cm, ctgao.passion.elementaltakedown.domain.GameTable.class.getName());
+            createCache(cm, ctgao.passion.elementaltakedown.domain.PlayerProfile.class.getName());
+            createCache(cm, ctgao.passion.elementaltakedown.domain.CardProfile.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

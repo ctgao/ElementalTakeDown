@@ -1,0 +1,49 @@
+{
+  "applications": "*",
+  "changelogDate": "20230921210043",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "player_profile",
+  "fields": [
+    {
+      "fieldName": "activeCardIdx",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "3",
+      "fieldValidateRulesMin": "1"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "PlayerProfile",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "userProfile",
+      "ownerSide": true,
+      "relationshipName": "user",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "cardProfile",
+      "ownerSide": true,
+      "relationshipName": "card1",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "cardProfile",
+      "ownerSide": true,
+      "relationshipName": "card2",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "cardProfile",
+      "ownerSide": true,
+      "relationshipName": "card3",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "service": "no"
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity PlayerProfile.
+    -->
+    <changeSet id="20230921210043-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="player_profile"
+                                 constraintName="fk_player_profile__user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user_profile"/>
+
+        <addForeignKeyConstraint baseColumnNames="card1_id"
+                                 baseTableName="player_profile"
+                                 constraintName="fk_player_profile__card1_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="card_profile"/>
+
+        <addForeignKeyConstraint baseColumnNames="card2_id"
+                                 baseTableName="player_profile"
+                                 constraintName="fk_player_profile__card2_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="card_profile"/>
+
+        <addForeignKeyConstraint baseColumnNames="card3_id"
+                                 baseTableName="player_profile"
+                                 constraintName="fk_player_profile__card3_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="card_profile"/>
+    </changeSet>
+</databaseChangeLog>

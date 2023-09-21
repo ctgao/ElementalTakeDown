@@ -24,6 +24,15 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/damage">
         Damage
       </MenuItem>
+      <MenuItem icon="asterisk" to="/game-table">
+        Game Table
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/player-profile">
+        Player Profile
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/card-profile">
+        Card Profile
+      </MenuItem>
       {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
     </>
   );
