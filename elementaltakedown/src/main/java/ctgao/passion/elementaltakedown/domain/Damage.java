@@ -12,7 +12,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "damage")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Damage implements Serializable {
 
@@ -27,6 +27,7 @@ public class Damage implements Serializable {
     private String name;
 
     @NotNull
+    @Max(value = 20)
     @Column(name = "dmg_value", nullable = false)
     private Integer dmgValue;
 
@@ -35,6 +36,7 @@ public class Damage implements Serializable {
     @Column(name = "dmg_element", nullable = false)
     private DmgElementType dmgElement;
 
+    @Max(value = 5)
     @Column(name = "splash_dmg")
     private Integer splashDmg;
 

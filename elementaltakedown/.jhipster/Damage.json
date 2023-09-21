@@ -12,7 +12,8 @@
     {
       "fieldName": "dmgValue",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["required", "max"],
+      "fieldValidateRulesMax": "20"
     },
     {
       "fieldName": "dmgElement",
@@ -22,7 +23,9 @@
     },
     {
       "fieldName": "splashDmg",
-      "fieldType": "Integer"
+      "fieldType": "Integer",
+      "fieldValidateRules": ["max"],
+      "fieldValidateRulesMax": "5"
     },
     {
       "fieldName": "splashElement",

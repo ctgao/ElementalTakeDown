@@ -82,7 +82,7 @@ export const DamageUpdate = () => {
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? <ValidatedField name="id" required readOnly id="damage-id" label="ID" validate={{ required: true }} /> : null}
-              <ValidatedField label="Name" id="damage-name" name="name" data-cy="name" type="text" />
+              <ValidatedField label="Name" id="damage-name" name="name" data-cy="name" type="text" disabled />
               <ValidatedField
                 label="Dmg Value"
                 id="damage-dmgValue"
@@ -91,6 +91,7 @@ export const DamageUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'This field is required.' },
+                  max: { value: 20, message: 'This field cannot be more than 20.' },
                   validate: v => isNumber(v) || 'This field should be a number.',
                 }}
               />
@@ -101,7 +102,17 @@ export const DamageUpdate = () => {
                   </option>
                 ))}
               </ValidatedField>
-              <ValidatedField label="Splash Dmg" id="damage-splashDmg" name="splashDmg" data-cy="splashDmg" type="text" />
+              <ValidatedField
+                label="Splash Dmg"
+                id="damage-splashDmg"
+                name="splashDmg"
+                data-cy="splashDmg"
+                type="text"
+                validate={{
+                  max: { value: 5, message: 'This field cannot be more than 5.' },
+                  validate: v => isNumber(v) || 'This field should be a number.',
+                }}
+              />
               <ValidatedField label="Splash Element" id="damage-splashElement" name="splashElement" data-cy="splashElement" type="select">
                 {dmgElementTypeValues.map(dmgElementType => (
                   <option value={dmgElementType} key={dmgElementType}>

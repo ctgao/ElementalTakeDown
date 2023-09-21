@@ -16,7 +16,9 @@
     {
       "fieldName": "requiredEnergy",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMax": "5",
+      "fieldValidateRulesMin": "1"
     }
   ],
   "fluentMethods": true,

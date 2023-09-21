@@ -11,7 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "ultimate_atk")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class UltimateATK implements Serializable {
 
@@ -29,6 +29,8 @@ public class UltimateATK implements Serializable {
     private String description;
 
     @NotNull
+    @Min(value = 1)
+    @Max(value = 5)
     @Column(name = "required_energy", nullable = false)
     private Integer requiredEnergy;
 

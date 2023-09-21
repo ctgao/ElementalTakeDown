@@ -37,7 +37,7 @@ public class UserProfile implements Serializable {
         joinColumns = @JoinColumn(name = "user_profile_id"),
         inverseJoinColumns = @JoinColumn(name = "cards_id")
     )
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "basic", "skill", "ultimate", "owners" }, allowSetters = true)
     private Set<CharacterCard> cards = new HashSet<>();
 
